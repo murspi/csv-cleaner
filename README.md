@@ -14,15 +14,6 @@ Built with Python and pandas as part of a data-handling learning project.
 - Logging to both console and rotating log files  
 - Clear validation of input/output paths  
 
-## 📦 Installation
-
-Clone the repository and install dependencies:
-
-```bash
-git clone <your-repo-url>
-cd csv-cleaner
-pip install -r requirements.txt
-
 ## 🚀 Usage
 
 python main.py --input sample.csv --output cleaned.csv
@@ -60,3 +51,13 @@ csv-cleaner/
     ├── config.py
     ├── validators.py
     └── logger.py
+
+
+## 📦 Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone <your-repo-url>
+cd csv-cleaner
+pip install -r requirements.txt
