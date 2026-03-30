@@ -1,0 +1,23 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# Runtime/generated files
+*.json
+!config.json
+
+# CSV outputs
+*.csv
+!sample.csv
+
+# OS files
+.DS_Store
+Thumbs.db
