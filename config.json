@@ -1,0 +1,5 @@
+{
+    "strip_whitespace": true,
+    "dedupe": true,
+    "fill_missing": "NoData"
+}
