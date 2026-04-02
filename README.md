@@ -93,3 +93,16 @@ csv-cleaner/
     ├── validators.py
     └── logger.py
 ```
+
+* Column-specific cleaning rules via config.json (override global behavior)
+* Example:
+{
+  "strip_whitespace": true,
+  "uppercase": false,
+
+  "columns": {
+    "name": { "uppercase": true },
+    "city": { "strip_whitespace": true }
+  }
+}
+
