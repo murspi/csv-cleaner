@@ -23,7 +23,8 @@ def load_and_merge_config(args):
         "drop_missing": args.drop_missing,
         "fill_missing": args.fill_missing,
         "strip_whitespace": args.strip_whitespace,
-        "dedupe": args.dedupe
+        "dedupe": args.dedupe,
+        "uppercase": args.uppercase
     }
 
     # Merge config + CLI (CLI overrides)

@@ -14,6 +14,9 @@ def validate_path(args):
     if not input_path.exists():
         logger.error(f"ERROR: Input file does not exist: {input_path}")
         sys.exit(1)
+    if input_path.stat().st_size <= 0:
+        logger.error(f"ERROR: Input file is empty: {input_path}")
+        sys.exit(1)
 
     # Validate input file is a CSV
     if input_path.suffix.lower() != ".csv":

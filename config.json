@@ -1,5 +1,12 @@
 {
     "strip_whitespace": true,
-    "dedupe": true,
-    "fill_missing": "NoData"
+    "uppercase": false,
+    "columns": {
+        "name": {
+            "uppercase": true
+        },
+        "city": {
+            "strip_whitespace": true
+        }
+    }
 }

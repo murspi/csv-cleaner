@@ -52,6 +52,13 @@ def build_parser():
         help="Path to a JSON config file defining cleaning rules."
     )
 
+    parser.add_argument(
+        "--uppercase",
+        action="store_true",
+        default=None,
+        help="Make all text in CSV file uppercase"
+    )
+
     return parser
 
 def parse_args():

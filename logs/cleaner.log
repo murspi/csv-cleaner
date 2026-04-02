@@ -1,0 +1,47 @@
+2026-04-01 23:41:19,679 - validators - INFO - All paths validated successfully
+2026-04-01 23:41:27,399 - validators - INFO - All paths validated successfully
+2026-04-01 23:41:29,376 - main - INFO - Starting CSV Cleaner Tool
+2026-04-01 23:41:29,378 - main - DEBUG - Parsed arguments: Namespace(input='test.csv', output='out.csv', drop_missing=None, fill_missing=None, strip_whitespace=None, dedupe=None, config='config.json', uppercase=None)
+2026-04-01 23:41:29,378 - validators - ERROR - ERROR: Input file does not exist: test.csv
+2026-04-01 23:42:04,392 - validators - INFO - All paths validated successfully
+2026-04-01 23:42:04,660 - main - INFO - Starting CSV Cleaner Tool
+2026-04-01 23:42:04,662 - main - DEBUG - Parsed arguments: Namespace(input='sample.csv', output='fixedsample.csv', drop_missing=None, fill_missing=None, strip_whitespace=None, dedupe=None, config='config.json', uppercase=None)
+2026-04-01 23:42:04,667 - main - INFO - Path validation passed
+2026-04-01 23:42:04,667 - config - INFO - Loading config file: config.json
+2026-04-01 23:42:04,672 - config - DEBUG - Merged cleaning plan: {'strip_whitespace': True, 'uppercase': False, 'columns': {'name': {'uppercase': True}, 'city': {'strip_whitespace': True}}}
+2026-04-01 23:42:04,672 - main - DEBUG - Final cleaning plan {'strip_whitespace': True, 'uppercase': False, 'columns': {'name': {'uppercase': True}, 'city': {'strip_whitespace': True}}}
+2026-04-01 23:42:04,673 - cleaner - INFO - Loading CSV: sample.csv
+2026-04-01 23:42:04,680 - cleaner - DEBUG - Initial shape: (4, 3)
+2026-04-01 23:42:04,681 - cleaner - INFO - Stripping whitespaces from string columns
+2026-04-01 23:42:04,683 - cleaner - INFO - Applying column-specific rules to column name
+2026-04-01 23:42:04,684 - cleaner - INFO - - uppercase on 'name'
+2026-04-01 23:43:03,275 - validators - INFO - All paths validated successfully
+2026-04-01 23:43:03,563 - main - INFO - Starting CSV Cleaner Tool
+2026-04-01 23:43:03,565 - main - DEBUG - Parsed arguments: Namespace(input='sample.csv', output='fixedsample.csv', drop_missing=None, fill_missing=None, strip_whitespace=None, dedupe=None, config='config.json', uppercase=None)
+2026-04-01 23:43:03,565 - main - INFO - Path validation passed
+2026-04-01 23:43:03,565 - config - INFO - Loading config file: config.json
+2026-04-01 23:43:03,565 - config - DEBUG - Merged cleaning plan: {'strip_whitespace': True, 'uppercase': False, 'columns': {'name': {'uppercase': True}, 'city': {'strip_whitespace': True}}}
+2026-04-01 23:43:03,565 - main - DEBUG - Final cleaning plan {'strip_whitespace': True, 'uppercase': False, 'columns': {'name': {'uppercase': True}, 'city': {'strip_whitespace': True}}}
+2026-04-01 23:43:03,565 - cleaner - INFO - Loading CSV: sample.csv
+2026-04-01 23:43:03,567 - cleaner - DEBUG - Initial shape: (4, 3)
+2026-04-01 23:43:03,568 - cleaner - INFO - Stripping whitespaces from string columns
+2026-04-01 23:43:03,570 - cleaner - INFO - Applying column-specific rules to column name
+2026-04-01 23:43:03,570 - cleaner - INFO - - uppercase on 'name'
+2026-04-01 23:43:03,570 - cleaner - INFO - Applying column-specific rules to column city
+2026-04-01 23:43:03,571 - cleaner - INFO - - strip_whitespace on 'city'
+2026-04-01 23:43:03,571 - main - INFO - CSV cleaned successfully!
+2026-04-01 23:48:44,425 - validators - INFO - All paths validated successfully
+2026-04-01 23:48:44,726 - main - INFO - Starting CSV Cleaner Tool
+2026-04-01 23:48:44,727 - main - DEBUG - Parsed arguments: Namespace(input='sample.csv', output='fixedsample.csv', drop_missing=None, fill_missing=None, strip_whitespace=None, dedupe=None, config='config.json', uppercase=None)
+2026-04-01 23:48:44,727 - main - INFO - Path validation passed
+2026-04-01 23:48:44,728 - config - INFO - Loading config file: config.json
+2026-04-01 23:48:44,728 - config - DEBUG - Merged cleaning plan: {'strip_whitespace': True, 'uppercase': False, 'columns': {'name': {'uppercase': True}, 'city': {'strip_whitespace': True}}}
+2026-04-01 23:48:44,728 - main - DEBUG - Final cleaning plan {'strip_whitespace': True, 'uppercase': False, 'columns': {'name': {'uppercase': True}, 'city': {'strip_whitespace': True}}}
+2026-04-01 23:48:44,728 - cleaner - INFO - Loading CSV: sample.csv
+2026-04-01 23:48:44,729 - cleaner - DEBUG - Initial shape: (4, 3)
+2026-04-01 23:48:44,730 - cleaner - INFO - Stripping whitespaces from string columns
+2026-04-01 23:48:44,731 - cleaner - INFO - Applying column-specific rules to column name
+2026-04-01 23:48:44,731 - cleaner - INFO - - uppercase on 'name'
+2026-04-01 23:48:44,731 - cleaner - INFO - Applying column-specific rules to column city
+2026-04-01 23:48:44,732 - cleaner - INFO - - strip_whitespace on 'city'
+2026-04-01 23:48:44,733 - main - INFO - CSV cleaned successfully!

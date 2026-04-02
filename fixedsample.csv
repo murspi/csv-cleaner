@@ -1,4 +1,5 @@
 name,age,city
-John,30,New York
-Sarah,NoData,Los Angeles
-Bob,25,Chicago
+JOHN,30,New York
+SARAH,,Los Angeles
+BOB,25,Chicago
+JOHN,30,New York

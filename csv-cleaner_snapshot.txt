@@ -1,0 +1,406 @@
+
+=== FOLDER: C:\csv-cleaner ===
+
+--- FILE: C:\csv-cleaner\.gitignore ---
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# Runtime/generated files
+*.json
+!config.json
+
+# CSV outputs
+*.csv
+!sample.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+--- FILE: C:\csv-cleaner\config.json ---
+{
+    "strip_whitespace": true,
+    "dedupe": true,
+    "fill_missing": "NoData"
+}
+--- FILE: C:\csv-cleaner\csv-cleaner_snapshot.txt ---
+
+--- FILE: C:\csv-cleaner\fixedsample.csv ---
+name,age,city
+John,30,New York
+Sarah,NoData,Los Angeles
+Bob,25,Chicago
+
+--- FILE: C:\csv-cleaner\main.py ---
+from src.cli import build_parser
+from src.validators import validate_path
+from src.config import load_and_merge_config
+from src.cleaner import clean_csv
+from src.logger import get_logger
+
+def main():
+    logger = get_logger("main")
+
+    logger.info("Starting CSV Cleaner Tool")
+
+    # Parse CLI arguments
+    parser = build_parser()
+    args = parser.parse_args()
+
+    logger.debug(f"Parsed arguments: {args}")
+
+    # Validate paths
+    validate_path(args)
+    logger.info("Path validation passed")
+
+    # Merge config + CLI flags into a final cleaning plan
+    plan = load_and_merge_config(args)
+    logger.debug(f"Final cleaning plan {plan}")
+
+    # Run the cleaning pipeline
+    clean_csv(args.input, args.output, plan)
+
+    logger.info("CSV cleaned successfully!")
+
+if __name__ == "__main__":
+    main()
+--- FILE: C:\csv-cleaner\project-snapshot-generator.py ---
+import os
+
+def export_project_snapshot(
+    root_dir="C:\csv-cleaner",                 # ← This is the path to your project root
+    output_file="csv-cleaner_snapshot.txt"  # ← This is the output file name
+):
+    with open(output_file, "w", encoding="utf-8") as out:
+        for folder, subfolders, files in os.walk(root_dir):
+            
+            # Skip virtual environments and caches
+            if "venv" in folder or "__pycache__" in folder or ".git" in folder:
+                continue
+
+            out.write(f"\n=== FOLDER: {folder} ===\n")
+
+            for file in files:
+                path = os.path.join(folder, file)
+                out.write(f"\n--- FILE: {path} ---\n")
+                try:
+                    with open(path, "r", encoding="utf-8") as f:
+                        out.write(f.read())
+                except:
+                    out.write("[Binary or unreadable file skipped]\n")
+
+if __name__ == "__main__":
+    export_project_snapshot("C:\csv-cleaner")  # ← This means “current folder”
+
+--- FILE: C:\csv-cleaner\README.md ---
+# CSV Cleaner Tool
+
+A command-line tool for cleaning and transforming CSV files.  
+Built with Python and pandas as part of a data-handling learning project.
+
+## ✨ Features
+
+- Strip whitespace from string columns  
+- Remove duplicate rows  
+- Drop rows with missing values  
+- Fill missing values with a custom placeholder  
+- Convert empty/whitespace-only cells into proper missing values  
+- Configurable via CLI flags or a JSON config file  
+- Logging to both console and rotating log files  
+- Clear validation of input/output paths  
+
+## 📦 Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone <your-repo-url>
+cd csv-cleaner
+pip install -r requirements.txt
+
+## 🚀 Usage
+
+python main.py --input sample.csv --output cleaned.csv
+python main.py --input sample.csv --output cleaned.csv --config config.json
+
+## CLI Flags
+
+--drop-missing	Drop rows containing missing values
+--fill-missing VALUE	Fill missing values with VALUE
+--strip-whitespace	Strip whitespace from string columns
+--dedupe	Remove duplicate rows
+--config FILE	Load cleaning rules from JSON config
+
+## 🛠 Config File Example
+
+{
+    "strip_whitespace": true,
+    "dedupe": true,
+    "fill_missing": "NoData"
+}
+
+## 📁 Project Structure
+
+csv-cleaner/
+│
+├── main.py
+├── requirements.txt
+├── README.md
+├── config.json
+├── logs/
+│   └── app.log
+└── src/
+    ├── cleaner.py
+    ├── cli.py
+    ├── config.py
+    ├── validators.py
+    └── logger.py
+
+--- FILE: C:\csv-cleaner\requirements.txt ---
+pandas
+--- FILE: C:\csv-cleaner\sample.csv ---
+name,age,city
+"  John  "," 30 ","  New York  "
+Sarah," ",Los Angeles
+" Bob ",25,"  Chicago"
+John,30,New York
+=== FOLDER: C:\csv-cleaner\data ===
+
+=== FOLDER: C:\csv-cleaner\logs ===
+
+--- FILE: C:\csv-cleaner\logs\cleaner.log ---
+
+=== FOLDER: C:\csv-cleaner\src ===
+
+--- FILE: C:\csv-cleaner\src\cleaner.py ---
+import pandas as pd
+from pandas import DataFrame
+from src.logger import get_logger
+
+logger = get_logger("cleaner")
+
+def clean_csv(input_path, output_path, plan):
+    """
+    Apply cleaning rules from 'plan' to the CSV at input_path
+    and save the cleaned CSV to output_path.
+    """
+    
+    logger.info(f"Loading CSV: {input_path}")
+    df: DataFrame = pd.read_csv(input_path)
+
+    logger.debug(f"Initial shape: {df.shape}")
+
+    # Convert empty or whitespaces-only cells to NaN
+    df = df.replace(r'^\s*$', pd.NA, regex=True)
+
+    if plan.get("drop_missing"):
+        logger.info("Dropping rows with missing values")
+        df = df.dropna()
+
+    if plan.get("fill_missing"):
+        logger.info(f"Filling missing values with: {plan['fill_missing']}")
+        df = df.fillna(plan["fill_missing"])
+
+    if plan.get("strip_whitespace"):
+        logger.info("Stripping whitespaces from string columns")
+        df = df.apply(
+            lambda col: col.map(
+                lambda x: x.strip() if isinstance(x, str) else x
+            )
+        )
+
+    if plan.get("dedupe"):
+        df = df.drop_duplicates()
+
+    df.to_csv(output_path, index=False)
+
+--- FILE: C:\csv-cleaner\src\cli.py ---
+import argparse
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        description="CSV Cleaner Tool - clean, validate and transform CSV files."
+    )
+
+    # Required arguments. 
+    parser.add_argument(
+        "--input",
+        required=True,
+        help="Path to the input CSV file."
+    )
+
+    parser.add_argument(
+        "--output",
+        required=True,
+        help="Path where the cleaned CSV will be saved."
+    )
+
+    # Cleaning rule flags
+    parser.add_argument(
+        "--drop-missing",
+        action="store_true",
+        default=None,
+        help="Drop rows containing missing values."
+    )
+
+    parser.add_argument(
+        "--fill-missing",
+        type=str,
+        help="Fill missing values with the provided value."
+    )
+
+    parser.add_argument(
+        "--strip-whitespace",
+        action="store_true",
+        default=None,
+        help="Strip whitespace from string columns."
+    )
+
+    parser.add_argument(
+        "--dedupe",
+        action="store_true",
+        default=None,
+        help="Remove duplicate rows."
+    )
+
+    parser.add_argument(
+        "--config",
+        type=str,
+        help="Path to a JSON config file defining cleaning rules."
+    )
+
+    return parser
+
+def parse_args():
+    parser = build_parser()
+    return parser.parse_args()
+--- FILE: C:\csv-cleaner\src\config.py ---
+import json
+from pathlib import Path
+from src.logger import get_logger
+
+logger = get_logger("config")
+
+def load_and_merge_config(args):
+    """
+    Load config.json (if provided) and merge it with CLI flags.
+    CLI flags always override config file values.
+    """
+
+    # Load config file if provided
+    config_data = {}
+    if args.config:
+        config_path = Path(args.config)
+        logger.info(f"Loading config file: {config_path}")
+        with open(config_path, "r") as f:
+            config_data = json.load(f)
+
+    # Convert CLI flags into a dictionary
+    cli_data = {
+        "drop_missing": args.drop_missing,
+        "fill_missing": args.fill_missing,
+        "strip_whitespace": args.strip_whitespace,
+        "dedupe": args.dedupe
+    }
+
+    # Merge config + CLI (CLI overrides)
+    final_plan = config_data.copy()
+
+    for key, value in cli_data.items():
+        if value is not None: # overrides only if user explicitly passed the flag
+            final_plan[key] = value
+
+    logger.debug(f"Merged cleaning plan: {final_plan}")
+    return final_plan
+--- FILE: C:\csv-cleaner\src\logger.py ---
+import logging
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
+
+def get_logger(name: str):
+    """
+    Create and configure a logger with both console and file handlers.
+    """
+
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+
+    log_file = logs_dir / "cleaner.log"
+
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    # Prevent duplicate handlers if logger is called multiple times
+    if logger.handlers:
+        return logger
+    
+    # Console handler (INFO and above)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_format = logging.Formatter("[%(levelname)s] %(message)s")
+    console_handler.setFormatter(console_format)
+
+    # File handler (DEBUG and above)
+    file_handler = RotatingFileHandler(
+        log_file, maxBytes=500_000, backupCount=3
+    )
+
+    file_handler.setLevel(logging.DEBUG)
+    file_format = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    file_handler.setFormatter(file_format)
+
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+
+    return logger
+--- FILE: C:\csv-cleaner\src\validators.py ---
+from pathlib import Path
+from src.logger import get_logger
+import sys
+
+logger = get_logger("validators")
+
+def validate_path(args):
+    """
+    Validate input/output/config paths before running the cleaning pipeline
+    """
+
+    # Validate input file exists
+    input_path = Path(args.input)
+    if not input_path.exists():
+        logger.error(f"ERROR: Input file does not exist: {input_path}")
+        sys.exit(1)
+
+    # Validate input file is a CSV
+    if input_path.suffix.lower() != ".csv":
+        logger.error(f"ERROR: Input file must be a .csv file, got: {input_path.suffix}")
+        sys.exit(1)
+
+    # Validate output directory exists
+    output_path = Path(args.output)
+    output_dir = output_path.parent
+
+    # Allow writing to current directory (".")
+    if str(output_dir) not in (".", "") and not output_dir.exists():
+        logger.error(f"ERROR: Output directory does not exist: {output_dir}")
+        sys.exit(1)
+
+    # Validate config exists (if provided)
+    if args.config:
+        config_path = Path(args.config)
+        if not config_path.exists():
+            logger.error(f"ERROR: Config file does not exist {config_path}")
+            sys.exit(1)
+
+logger.info("All paths validated successfully")
