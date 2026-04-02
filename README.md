@@ -94,8 +94,9 @@ csv-cleaner/
     └── logger.py
 ```
 
-* Column-specific cleaning rules via config.json (override global behavior)
-* Example:
+## Column-specific cleaning rules via config.json (override global behavior)
+## Example:
+```json
 {
   "strip_whitespace": true,
   "uppercase": false,
@@ -105,4 +106,4 @@ csv-cleaner/
     "city": { "strip_whitespace": true }
   }
 }
-
+```
